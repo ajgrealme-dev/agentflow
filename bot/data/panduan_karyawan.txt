@@ -1,0 +1,15 @@
+PANDUAN RESMI KARYAWAN PT INDAH KIAT SERANG:
+1. CUTI TAHUNAN: Karyawan memiliki jatah 12 hari cuti setahun. Harus diajukan minimal 3 hari sebelum tanggal cuti lewat Telegram Bot ini.
+2. JAM SHIFT KERJA:
+   - Shift 1 (Pagi): Jam 07.00 - 15.00 WIB.
+   - Shift 2 (Sore): Jam 15.00 - 23.00 WIB.
+   - Shift 3 (Malam): Jam 23.00 - 07.00 WIB.
+3. KETENTUAN SERAGAM PABRIK:
+   - Hari Senin-Rabu: Seragam Kemeja Biru Pabrik, celana panjang hitam, safety shoes, dan Safety Helmet (Helm proyek).
+   - Hari Kamis-Jumat: Kemeja Abu-Abu.
+4. KLAIM KACAMATA BPJS KARYAWAN:
+   - Perusahaan menanggung subsidi kacamata maksimal Rp 500.000 per tahun.
+   - Syarat klaim: Kirim foto kwitansi asli dari Optik rekanan beserta surat rujukan BPJS ke HRD.
+5. GAJIAN DAN REKENING:
+   - Gajian dilakukan setiap tanggal 28 setiap bulannya melalui transfer Bank Mandiri.
+   - Slip gaji bulanan bisa diunduh mandiri lewat bot ini menggunakan perintah /slip [bulan].

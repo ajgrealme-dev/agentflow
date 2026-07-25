@@ -1,0 +1,163 @@
+{
+  "name": "AgentFlow — Invoice Email ke Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": { "item": [{ "mode": "everyMinute" }] },
+        "filters": { "sender": "", "subject": "invoice OR tagihan OR faktur OR kwitansi OR bon" }
+      },
+      "id": "gmail-trigger",
+      "name": "📧 Gmail — Email Masuk",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": { "gmailOAuth2": { "id": "GANTI_DENGAN_CREDENTIAL_ID", "name": "Gmail Account" } },
+      "notes": "Pantau email masuk setiap menit. Filter: email dengan kata kunci invoice/tagihan/faktur."
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "messageId": "={{ $json.id }}",
+        "options": { "attachmentsPrefix": "attachment_" }
+      },
+      "id": "get-attachment",
+      "name": "📎 Ambil Attachment",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "credentials": { "gmailOAuth2": { "id": "GANTI_DENGAN_CREDENTIAL_ID", "name": "Gmail Account" } },
+      "notes": "Ambil attachment (file PDF/JPG) dari email yang masuk."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "queryAuth",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [{ "name": "key", "value": "={{ $env.GEMINI_API_KEY }}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [{
+            "name": "contents",
+            "value": "=[{\"parts\":[{\"text\":\"Kamu adalah AI ekstraksi data dokumen keuangan Indonesia. Baca dokumen ini dan kembalikan JSON: {documentType, confidence (0-100), data:{NoInvoice, Tanggal, Vendor, Items, Subtotal, PPN, Total, Catatan}, issues:[]}. Hanya JSON, tanpa penjelasan.\"},{\"inline_data\":{\"mime_type\":\"={{ $binary.attachment_0.mimeType }}\",\"data\":\"={{ $binary.attachment_0.data }]\"}}]}]"
+          }]
+        },
+        "options": {}
+      },
+      "id": "gemini-ocr",
+      "name": "🤖 Gemini — Baca Dokumen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300],
+      "notes": "Kirim file ke Gemini Vision API untuk dibaca dan diekstrak datanya."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [{
+            "value1": "={{ JSON.parse($json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).confidence }}",
+            "operation": "largerEqual",
+            "value2": 80
+          }]
+        }
+      },
+      "id": "confidence-check",
+      "name": "🔍 Cek Confidence Score",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "notes": "Jika confidence >= 80%, langsung input ke Sheets. Jika < 80%, kirim ke dashboard untuk review manual."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "value": "GANTI_DENGAN_GOOGLE_SHEETS_ID" },
+        "sheetName": { "value": "Rekap Invoice" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tanggal Input":    "={{ new Date().toLocaleDateString('id-ID') }}",
+            "No Invoice":       "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).data.NoInvoice }}",
+            "Tanggal Dokumen":  "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).data.Tanggal }}",
+            "Vendor/Supplier":  "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).data.Vendor }}",
+            "Total":            "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).data.Total }}",
+            "PPN":              "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).data.PPN }}",
+            "Grand Total":      "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).data.Total }}",
+            "Source Email":     "={{ $node['📧 Gmail — Email Masuk'].json.from }}",
+            "Confidence AI":    "={{ JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).confidence }}%",
+            "Status":           "Diinput Otomatis ✅"
+          }
+        }
+      },
+      "id": "sheets-write",
+      "name": "📊 Google Sheets — Input Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1120, 180],
+      "credentials": { "googleSheetsOAuth2Api": { "id": "GANTI_DENGAN_CREDENTIAL_ID", "name": "Google Sheets" } },
+      "notes": "Input data hasil OCR ke Google Sheets. GANTI documentId dengan Spreadsheet ID kamu!"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/webhook",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [{
+            "name": "payload",
+            "value": "={{ {type: 'pending_review', documentName: $node['📧 Gmail — Email Masuk'].json.subject, from: $node['📧 Gmail — Email Masuk'].json.from, extractedData: JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')), confidence: JSON.parse($node['🤖 Gemini — Baca Dokumen'].json.candidates[0].content.parts[0].text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'')).confidence} }}"
+          }]
+        }
+      },
+      "id": "dashboard-notify",
+      "name": "📋 Kirim ke Dashboard (Review Manual)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 420],
+      "notes": "Jika confidence rendah, kirim data ke Approval Queue di dashboard untuk direview supervisor."
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "chatId": "GANTI_DENGAN_NOMOR_WA_SUPERVISOR",
+        "text": "={{ '✅ Invoice baru berhasil diinput!\\n\\n📄 *' + $node['📧 Gmail — Email Masuk'].json.subject + '*\\n📧 Dari: ' + $node['📧 Gmail — Email Masuk'].json.from + '\\n\\nData sudah masuk ke Google Sheets.' }}"
+      },
+      "id": "whatsapp-notif-success",
+      "name": "📱 WA — Notif Sukses ke Supervisor",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1340, 180],
+      "notes": "Kirim notifikasi ke WhatsApp/Telegram supervisor bahwa invoice berhasil diinput."
+    }
+  ],
+  "connections": {
+    "📧 Gmail — Email Masuk": {
+      "main": [[{ "node": "📎 Ambil Attachment", "type": "main", "index": 0 }]]
+    },
+    "📎 Ambil Attachment": {
+      "main": [[{ "node": "🤖 Gemini — Baca Dokumen", "type": "main", "index": 0 }]]
+    },
+    "🤖 Gemini — Baca Dokumen": {
+      "main": [[{ "node": "🔍 Cek Confidence Score", "type": "main", "index": 0 }]]
+    },
+    "🔍 Cek Confidence Score": {
+      "main": [
+        [{ "node": "📊 Google Sheets — Input Data", "type": "main", "index": 0 }],
+        [{ "node": "📋 Kirim ke Dashboard (Review Manual)", "type": "main", "index": 0 }]
+      ]
+    },
+    "📊 Google Sheets — Input Data": {
+      "main": [[{ "node": "📱 WA — Notif Sukses ke Supervisor", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": "agentflow-template-v1",
+    "templateCredsSetupCompleted": false
+  },
+  "_comment": "PETUNJUK SETUP: 1) Buka n8n > Import > Upload file ini. 2) Setup credential Gmail OAuth2. 3) Setup credential Google Sheets OAuth2. 4) Ganti GOOGLE_SHEETS_ID dengan ID spreadsheet tujuan. 5) Ganti NOMOR_WA_SUPERVISOR. 6) Aktifkan workflow. SELESAI!"
+}

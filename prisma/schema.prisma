@@ -1,0 +1,277 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Company {
+  id                String             @id @default(uuid())
+  name              String
+  geminiApiKey      String?            // Optional BYOK (Bring Your Own Key)
+  telegramBotToken  String?            // Custom telegram bot token for this company
+  
+  // Fitur Geofencing
+  officeLatitude    Float?             // Koordinat Lintang Kantor
+  officeLongitude   Float?             // Koordinat Bujur Kantor
+  officeRadius      Float?             @default(50.0) // Radius absen aman (dalam meter)
+  
+  createdAt         DateTime           @default(now())
+  
+  users             User[]
+  leads             Lead[]
+  receipts          FinancialReceipt[]
+  inventory         InventoryItem[]
+  approvals         Approval[]
+  auditLogs         AuditLog[]
+  absences          Absensi[]
+  invoices          Invoice[]
+  salesOrders       SalesOrder[]
+  requisitions      PurchaseRequisition[]
+  agentSessions     AgentSession[]
+}
+
+model User {
+  id                 String             @id @default(uuid())
+  companyId          String
+  company            Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name               String
+  email              String             @unique
+  passwordHash       String
+  role               String             @default("STAFF") // OWNER, SUPERVISOR, STAFF
+  telegramChatId     String?            @unique            // Linked Telegram chat ID for Bot interaction
+  phone              String?            // Nomor WA Karyawan untuk notifikasi
+  
+  // Fitur Kontrak PKWT
+  contractStart      DateTime?          // Tanggal Mulai Kontrak
+  contractEnd        DateTime?          // Tanggal Selesai Kontrak
+  
+  divisi             String?
+  jatahCutiSisa      Int                @default(12)
+  kepalaShiftId      String?
+  kepalaBagianId     String?
+  kepalaDivisiId     String?
+  createdAt          DateTime           @default(now())
+  
+  receipts           FinancialReceipt[]
+  approvalsRequested Approval[]         @relation("Requester")
+  approvalsApproved  Approval[]         @relation("Approver")
+  absences           Absensi[]
+}
+
+model Lead {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  source      String   // UPWORK, LINKEDIN, JOBSTREET
+  title       String
+  companyName String?
+  description String
+  url         String
+  aiScore     Int?
+  status      String   @default("NEW") // NEW, CONTACTED, REJECTED, CLOSED
+  createdAt   DateTime @default(now())
+}
+
+model FinancialReceipt {
+  id              String    @id @default(uuid())
+  companyId       String
+  company         Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  uploadedById    String?
+  uploadedBy      User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  imageUrl        String?
+  merchantName    String?
+  totalAmount     Float?
+  transactionDate DateTime?
+  rawAiAnalysis   String?   // JSON String from Gemini output
+  createdAt       DateTime  @default(now())
+}
+
+model InventoryItem {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sku       String?
+  name      String
+  quantity  Int      @default(0)
+  location  String?
+  createdAt DateTime @default(now())
+}
+
+model Approval {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  requesterId String
+  requester   User     @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  approverId  String?
+  approver    User?    @relation("Approver", fields: [approverId], references: [id], onDelete: SetNull)
+  type        String   // LEAVE, PURCHASE, REIMBURSEMENT
+  details     String   // JSON String containing specific info (e.g. date range, item price)
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  actorId   String?
+  action    String
+  targetId  String?
+  details   String
+  createdAt DateTime @default(now())
+}
+
+model Absensi {
+  id              String   @id @default(uuid())
+  companyId       String
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  latitude        Float
+  longitude       Float
+  statusKehadiran String   // Hadir, Ditolak
+  createdAt       DateTime @default(now())
+}
+
+model Invoice {
+  id                String    @id @default(uuid())
+  companyId         String
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  type              String    // "RECEIVABLE" (AR) atau "PAYABLE" (AP)
+  invoiceNumber     String    @unique
+  clientName        String    // Nama Vendor atau Distributor
+  clientPhone       String?   // Nomor HP untuk WhatsApp Reminder
+  amount            Float
+  dueDate           DateTime
+  status            String    @default("UNPAID") // UNPAID, PAID, OVERDUE
+  lastReminderSent  DateTime?
+  createdAt         DateTime  @default(now())
+}
+
+model SalesOrder {
+  id                String    @id @default(uuid())
+  companyId         String
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  soNumber          String    @unique
+  customerName      String
+  itemsJson         String    // JSON daftar barang pesanan & jumlahnya
+  status            String    @default("PENDING") // PENDING, PROCESSING, COMPLETED
+  createdAt         DateTime  @default(now())
+  
+  requisitions      PurchaseRequisition[]
+}
+
+model PurchaseRequisition {
+  id                String    @id @default(uuid())
+  companyId         String
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  prNumber          String    @unique
+  salesOrderId      String?
+  salesOrder        SalesOrder? @relation(fields: [salesOrderId], references: [id], onDelete: SetNull)
+  itemsJson         String    // JSON daftar bahan baku yang diajukan untuk dibeli
+  status            String    @default("DRAFT") // DRAFT, SENT_RFQ, PO_CREATED
+  createdAt         DateTime  @default(now())
+}
+
+// ── DATA MODEL BARU UNTUK RUNTIME AGEN ───────────────────────
+
+model AIAgent {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  role         String        // "INTERN", "STAFF", "MANAGER"
+  divisi       String        // "FINANCE", "HR", "PURCHASING"
+  goal         String        // Tujuan utama agen
+  sopMarkdown  String        // Panduan kerja tertulis (SOP) yang dibaca AI sebelum bertugas
+  status       String        @default("IDLE") // IDLE, RUNNING, ERROR, WAITING_APPROVAL
+  tokenCostUSD Float         @default(0.0) // Total biaya API yang dihabiskan
+  createdAt    DateTime      @default(now())
+  
+  tasks        AIAgentTask[]
+  steps        AIAgentStep[]
+  tools        AgentTool[]   // Hubungan ke tabel perkakas spesifik peran
+}
+
+model AgentTool {
+  id          String   @id @default(uuid())
+  agentId     String
+  agent       AIAgent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  toolName    String   // Nama perkakas (misal: "SAP S/4HANA", "Kyriba")
+  description String?  @db.Text
+  category    String   // "SPESIFIK" atau "UMUM"
+  createdAt   DateTime @default(now())
+}
+
+model AIAgentTask {
+  id           String         @id @default(uuid())
+  agentId      String
+  agent        AIAgent        @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  status       String         @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED, WAITING_APPROVAL
+  currentState String         // JSON String penyimpan status variabel saat ini (checkpoint)
+  escalatedTo  String?        // ID agent supervisor atau "HUMAN" jika didelegasikan ke atas
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  
+  steps        AIAgentStep[]
+}
+
+model AIAgentStep {
+  id           String       @id @default(uuid())
+  taskId       String
+  task         AIAgentTask  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  agentId      String
+  agent        AIAgent      @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  actionName   String       // Misal: "OCR_VISION", "DATABASE_INSERT", "TELEGRAM_ALERT"
+  inputData    String       // Input JSON ke tool/LLM
+  outputData   String       // Output JSON dari tool/LLM
+  isError      Boolean      @default(false)
+  errorMessage String?
+  createdAt    DateTime     @default(now())
+}
+
+model AgentSession {
+  id           String             @id @default(uuid())
+  companyId    String
+  company      Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title        String
+  status       String             @default("RUNNING") // RUNNING, PAUSED_FOR_HUMAN, COMPLETED, FAILED
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  messages     AgentMessage[]
+  participants AgentParticipant[]
+}
+
+model AgentMessage {
+  id         String       @id @default(uuid())
+  sessionId  String
+  session    AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  senderName String
+  senderRole String
+  content    String       @db.Text
+  
+  toolName   String?
+  toolArgs   String?
+  toolResult String?
+  
+  createdAt  DateTime     @default(now())
+}
+
+model AgentParticipant {
+  id        String       @id @default(uuid())
+  sessionId String
+  session   AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  name      String
+  role      String
+  type      String       // AI atau HUMAN
+}
+

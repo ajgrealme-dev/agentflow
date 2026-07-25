@@ -1,0 +1,76 @@
+==================================================================
+        DRAF REVISI CV AZIZ MAULANA (SIAP PAKAI & ATS-FRIENDLY)
+==================================================================
+
+[1] NAMA & TITLE
+------------------------------------------------------------------
+AZIZ MAULANA
+Warehouse & Operations Administrator (Automation-Enabled)
+
+
+[2] PROFIL PROFESSIONAL
+------------------------------------------------------------------
+Lulusan Pondok Pesantren dengan disiplin dan integritas tinggi, yang saat ini sedang menempuh pendidikan S1 Manajemen (Universitas Pamulang). Memiliki minat besar dalam efisiensi operasional dan administrasi. Mampu mengombinasikan ketelitian administratif dengan solusi otomasi digital (Node.js & AI) untuk mempercepat proses input data. Pribadi yang patuh pada aturan, jujur, dan siap berkontribusi menjaga akurasi catatan data di PT Indah Kiat Serang.
+
+
+[3] KONTAK & INFO PRIBADI
+------------------------------------------------------------------
+Telepon: +62822-5805-0509
+Email: ajrealme@gmail.com
+Telegram: @_aziizz_
+Domisili: Ciruas, Serang, Banten
+
+
+[4] PENDIDIKAN
+------------------------------------------------------------------
+* UNIVERSITAS PAMULANG
+  S1 Manajemen (Sedang Berjalan / Proses)
+
+* DAAR AL-ILMI BOARDING SCHOOL
+  Jurusan Ilmu Pengetahuan Sosial (Lulus: 2025)
+
+
+[5] KEMAMPUAN / SKILLS
+------------------------------------------------------------------
+* KEAHLIAN ADMINISTRATIF:
+  Data Entry (Input Data), Microsoft Office (Word, Excel), 
+  Penyusunan Laporan Harian, Pencatatan Dokumen.
+
+* KEAHLIAN OTOMASI & IT (PROJECT-BASED):
+  Dasar JavaScript (Node.js), SQL Database (SQLite), 
+  Integrasi API Gemini (AI Vision & NLP), Pembuatan Telegram Bot.
+
+* KEAHLIAN PERSONAL:
+  Kedisiplinan Tinggi (Pondok Pesantren), Ketelitian & Akurasi Data,
+  Kemauan Belajar Tinggi, Kepatuhan Aturan Kerja.
+
+
+[6] PENGALAMAN PROYEK MANDIRI
+------------------------------------------------------------------
+Developer & Creator - Proyek Otomasi "AgentFlow Bot" (Maret 2026 - Sekarang)
+* Merancang dan membangun Telegram Bot menggunakan Node.js dan database SQLite 
+  untuk mensimulasikan sistem administrasi pergudangan tanpa kertas (paperless).
+* Mengintegrasikan AI (Gemini API) untuk membaca foto bukti transaksi (Bon/Laporan) 
+  agar data ter-input otomatis ke database SQL tanpa ketik manual.
+* Membuat sistem pencocokan otomatis (Rekonsiliasi) antara Laporan Harian dengan 
+  fisik Bon untuk mempermudah audit pembukuan harian.
+* Merancang alur persetujuan cuti berjenjang 3-atasan (Shift -> Bagian -> Divisi) 
+  secara digital di Telegram.
+
+
+[7] PENGALAMAN KERJA LAINNYA
+------------------------------------------------------------------
+* Asisten Chief Dapur SPPG (Januari 2026 - Sekarang)
+  - Membantu chief membuat menu harian.
+  - Membantu chief mempersiapkan bahan dan kebutuhan menu secara disiplin.
+
+* Guru Matematika - MTSs As-Salam (November 2025 - Januari 2026)
+  - Memberikan pemahaman kepada siswa terkait materi ajar matematika dasar.
+  - Melakukan input nilai perkembangan siswa.
+  - Membuat dan menyusun laporan raport siswa secara berkala.
+
+* Guru Diniyah - TPQ Al-Islah (September 2025 - November 2025)
+  - Memberikan pemahaman kepada siswa terkait materi keagamaan dasar.
+  - Melakukan input nilai perkembangan mengaji siswa.
+  - Membuat laporan penilaian akhir raport siswa.
+==================================================================

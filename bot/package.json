@@ -1,0 +1,15 @@
+{
+  "name": "agentflow-bot",
+  "version": "1.0.0",
+  "description": "Telegram Bot Asisten Admin",
+  "main": "bot.js",
+  "type": "module",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "node-telegram-bot-api": "^0.64.0",
+    "sqlite3": "^5.1.7"
+  }
+}

@@ -1,0 +1,21 @@
+﻿==================================================
+        TOKO UTAMA ELEKTRONIK & ATK
+ Jl. Raya Serang No. 45, Ciruas, Serang, Banten
+==================================================
+NOTA PENJUALAN: INVOICE-2026-99081
+Tanggal: 25 Juli 2026
+Kepada: Divisi Purchasing AgentFlow
+
+[DETAIL BARANG]
+1. 3x Kertas HVS A4 80gr Sinar Dunia @ Rp 55.000 -> Rp 165.000
+2. 5x Ballpoint Pilot G2 Black @ Rp 18.500     -> Rp 92.500
+3. 2x Tinta Printer Epson L3210 Black @ Rp 95.000 -> Rp 190.000
+--------------------------------------------------
+SUBTOTAL:                          Rp 447.500
+PPN 11%:                           Rp  49.225
+--------------------------------------------------
+TOTAL AKHIR:                       Rp 496.725
+==================================================
+Status: BELUM DIBAYAR (Jatuh Tempo: 5 Agustus 2026)
+Metode Pembayaran: Transfer Bank BCA - Rek: 809921782 a/n Toko Utama
+==================================================
