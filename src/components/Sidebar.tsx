@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, LayoutGrid, MessageSquare, Wallet, Users, Package,
   Cpu, Scale, Megaphone, Headphones, Target, Bot, Settings, Presentation,
-  ChevronLeft, ChevronRight, ChevronDown, Sun, Moon, LogOut, Zap
+  ChevronLeft, ChevronRight, ChevronDown, Sun, Moon, LogOut, Zap, ShoppingBag
 } from 'lucide-react';
 import { useSidebar } from './SidebarProvider';
 import { useTheme } from './ThemeProvider';
