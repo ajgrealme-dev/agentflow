@@ -33,6 +33,9 @@ model Company {
   salesOrders       SalesOrder[]
   requisitions      PurchaseRequisition[]
   agentSessions     AgentSession[]
+  suppliers         Supplier[]
+  sourcingItems     SourcingItem[]
+  brokerDeals       BrokerDeal[]
 }
 
 model User {
@@ -274,4 +277,86 @@ model AgentParticipant {
   role      String
   type      String       // AI atau HUMAN
 }
+
+// ==========================================
+// B2B BROKERAGE ENGINE & SOURCING MATRIX
+// ==========================================
+
+model Supplier {
+  id              String         @id @default(uuid())
+  companyId       String
+  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String         // Nama Pabrik Produsen / Supplier
+  category        String         // Kategori: APD, Sparepart, Packaging, Bahan Baku, Limbah
+  contactPerson   String?
+  phone           String?
+  email           String?
+  city            String?        // Kota Lokasi Pabrik Supplier (misal: Tangerang, Jakarta)
+  
+  rating          Float          @default(5.0)  // Rating performa pengiriman & respon
+  paymentTerms    String         @default("DP30") // DP30, FULL_BEFORE_SHIP, TOP30
+  
+  sourcingItems   SourcingItem[]
+  deals           BrokerDeal[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model SourcingItem {
+  id              String         @id @default(uuid())
+  companyId       String
+  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  supplierId      String
+  supplier        Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  
+  name            String         // Nama Barang Industri (misal: Stretch Film 500mm 17mic)
+  category        String         // Packaging, APD, Sparepart, Raw Material
+  sku             String?
+  unit            String         @default("pcs") // pcs, roll, ton, box, set
+  
+  baseCostPrice   Float          // Harga Modal HPP dari Supplier (misal: 10000)
+  targetMarginPct Float          @default(25.0) // Persentase Margin Keuntungan Broker (misal: 25%)
+  sellingPrice    Float          // Harga Jual Resmi Penawaran ke Pembeli (baseCostPrice * (1 + targetMarginPct/100))
+  
+  minOrderQty     Int            @default(100) // Minimum Order Quantity (MOQ)
+  
+  deals           BrokerDeal[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model BrokerDeal {
+  id              String         @id @default(uuid())
+  companyId       String
+  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  buyerName       String         // Nama Pabrik Pembeli (misal: PT Nikomas Gemilang)
+  buyerEmail      String?
+  buyerPhone      String?
+  buyerCity       String?        // Lokasi Kawasan Industri (misal: Cikande, Cilegon)
+  
+  supplierId      String
+  supplier        Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  
+  sourcingItemId  String
+  sourcingItem    SourcingItem   @relation(fields: [sourcingItemId], references: [id], onDelete: Cascade)
+  
+  quantity        Int
+  totalBaseCost   Float          // Total Modal ke Supplier (quantity * baseCostPrice)
+  totalSellingVal Float          // Total Tagihan Penawaran ke Pembeli (quantity * sellingPrice)
+  grossProfit     Float          // Profit Keuntungan Bersih Broker (totalSellingVal - totalBaseCost)
+  
+  paymentScheme   String         @default("DP30") // DP30, FULL_ADVANCE, COMMISSION_FEE
+  requiredDpAmt   Float          // Jumlah Nominal Uang DP dari Pembeli yang dibutuhkan
+  
+  status          String         @default("QUOTED") // DRAFT, QUOTED, PO_RECEIVED, DP_PAID, SHIPPED, COMPLETED
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
 

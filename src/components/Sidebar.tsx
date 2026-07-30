@@ -32,6 +32,7 @@ const navItems: NavItem[] = [
   { href: '/workbench',  icon: LayoutGrid,      label: 'Meja Kerja', primary: true },
   { href: '/',           icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/command',    icon: MessageSquare,   label: 'Chatbot' },
+  { href: '/sourcing-matrix', icon: ShoppingBag, label: 'Makelar B2B (Matrix)', highlight: true },
   
   // ── 8 CHIEF DIVISIONS WITH FULL TOOLS SUB-MENUS ──────────────
   {

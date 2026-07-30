@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev:db": "pglite-server -p 51214 -d prisma/pgdata -m 100",
-    "dev:next": "next dev --webpack",
+    "dev:next": "next dev -H 0.0.0.0 --webpack",
     "dev:bot": "cd bot && npm run start",
     "dev": "concurrently \"npm run dev:db\" \"npm run dev:next\" \"npm run dev:bot\"",
     "build": "next build",
