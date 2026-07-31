@@ -1,95 +1,117 @@
-﻿# 🏆 MASTER BLUEPRINT: AGENTFLOW B2B AUTOMATED BROKERAGE ENGINE
-## System Architecture & Operations Manual for Autonomous Cash-Generating Machine
+﻿# 🏆 MASTER BLUEPRINT 2.0: AGENTFLOW AUTONOMOUS B2B INDUSTRIAL BROKERAGE
+## Dokumen Perencanaan Strategis, Arsitektur Scraper, Detail Finansial & Operasional Lapangan
+## Skala Operasional: Seluruh Kawasan Industri Indonesia
 
 ---
 
-## 📌 1. VISI KUNCI & IDENTITAS BISNIS
-* **Tujuan Utama:** Menjadikan AgentFlow sebagai **"Mesin Pencetak Uang Otonom 24/7"** milik pribadi.
-* **Pelaku Usaha (Solo Founder):** **AZIZ** (Independent Industrial Sourcing Specialist).
-* **Mitra Operasional:** **AgentFlow AI Agent** (Sistem AI Otonom).
-* **Status Legalitas:** **Perorangan** (Memakai Rekening Bank Pribadi AZIZ). Tidak menggunakan klaim palsu PT/CV.
-* **Wilayah Target Utama:** Kawasan Industri Modern Cikande, Nikomas Gemilang, KIEC Cilegon, dan Serang (Provinsi Banten).
+## 📌 PILAR 1: VISI STRATEGIS & ROADMAP EKSPANSI NASIONAL
 
----
+### A. Identitas Usaha & Filosofi
+* **Model Usaha:** **Independent Industrial Sourcing Agent (Perorangan)**.
+* **Pelaku Utama:** **AZIZ** (Pengambil Keputusan & Pemilik Usaha) + **AgentFlow** (Sistem AI Otonom 24/7).
+* **Prinsip Bisnis:** *"Menyelesaikan masalah pengadaan pabrik dengan harga paling murah & pengiriman tercepat di Indonesia."*
+* **Strategi Profit:** **Margin Tipis (5% - 8%) x Volume Kuantitas Tinggi**.
 
-## 💰 2. STRATEGI BISNIS & MEKANISME KEUANGAN MODAL RP 0
-
-### A. Strategi Penentuan Harga (Pricing Strategy)
-* **Strategi:** **High Volume x Margin Tipis (5% – 8%)**.
-* **Posisi Pasar:** Penawaran termurah dan tercepat di Banten untuk menarik volume transaksi partai besar (grosir) dari pabrik.
-
-### B. Mekanisme Keuangan Modal Rp 0 (DP 50% Guarantee)
-* **Klausa Pembayaran:** **DP 50% saat PO diterbitkan + 50% Pelunasan saat barang sampai di lokasi (Cash Against Delivery / CAD)**.
-* **Prinsip Matematika Modal Rp 0:**
-  $$\text{Uang DP 50\% dari Pembeli} \ge \text{100\% Modal HPP ke Master Stockist}$$
-* **Sirkulasi Uang:** Pembeli mentransfer DP 50% ke Rekening Bank Pribadi AZIZ. Uang DP tersebut digunakan untuk melunasi 100% modal awal ke Supplier Grosir. AZIZ memegang sisa profit bersih sejak hari pertama tanpa mengeluarkan modal pribadi sepeser pun.
-
----
-
-## 🛡️ 3. PERISAI PERLINDUNGAN RISIKO (RISK GUARD & BAST)
-
-1. **Anti-Bypass (Blind Shipping):** Supplier Grosir diwajibkan mengirim barang menggunakan **Surat Jalan Polos atas nama AZIZ**, tanpa mencantumkan identitas/invoice supplier asal.
-2. **Anti-Retur (Garansi Retur 1:1 & BAST):** Penyerahan barang menggunakan Berita Acara Serah Terima (BAST). Supplier diwajibkan memberi garansi ganti baru 1:1 jika barang ditolak QC pabrik.
-3. **Penetrasi Pasar (Backup Vendor Strategy):** Memposisikan diri sebagai **"Mitra Supplier Cadangan Resmi"** (bukan mengusir supplier lama pabrik), sehingga pabrik dengan senang hati menerima penawaran pembanding.
-4. **Pencarian Bertingkat (Cascade Sourcing):** Jika harga distributor lokal mahal, AI melompat mencari pabrik produsen tangan pertama / Master Stockist terbesar di Jabodetabek.
-
----
-
-## 🔄 4. ARSITEKTUR LOOP ENGINEERING (CLOSED-LOOP AUTONOMOUS SYSTEM)
-
-Sistem berputar 24 jam non-stop di background (dikendalikan PM2 `agentflow-broker-engine`) melalui 4 Tahap Loop:
-
+### B. Roadmap Tahapan Ekspansi Wilayah (Nasional)
 ```
-+-----------------------------------------------------------------------+
-|                       CLOSED-LOOP ENGINEERING 24/7                    |
-+-----------------------------------------------------------------------+
-|  [STAGE 1: PERCEIVE]                                                  |
-|  • Scraper menyisir sinyal kebutuhan pabrik di Banten 24/7            |
-|                                                                       |
-|  [STAGE 2: REASONING & MATCHMAKING]                                   |
-|  • Otak Sourcing Matrix menghitung Modal HPP + Margin Tipis 8%        |
-|  • Mengunci klausa DP 50% ke Rekening Pribadi AZIZ                    |
-|                                                                       |
-|  [STAGE 3: ACTION & EXECUTION]                                        |
-|  • Generasi Surat Penawaran Harga PDF Otonom (AZIZ)                   |
-|  • Outreach via Email/WA Bot + Notifikasi Laporan Telegram            |
-|                                                                       |
-|  [STAGE 4: EVALUATE & RAG MEMORY]                                     |
-|  • Mencatat riwayat respon pabrik & memperbarui memori database        |
-+-----------------------------------------------------------------------+
++--------------------------------------------------------------------------+
+|                       ROADMAP EKSPANSI INDONESIA                         |
++--------------------------------------------------------------------------+
+|  FASE 1 (Fokus Awal)   : Banten (Cikande, Nikomas, Cilegon, Serang)     |
+|  FASE 2 (Jabodetabek)  : Cikarang, Karawang, Pulogadung, Tangerang, Bogor|
+|  FASE 3 (Jawa Tengah)  : Semarang, Kendal, Demak, Solo                  |
+|  FASE 4 (Jawa Timur)   : Surabaya, Gresik, Pasuruan, Sidoarjo             |
+|  FASE 5 (Luar Jawa)    : Medan, Batam, Makassar, Balikpapan              |
++--------------------------------------------------------------------------+
 ```
 
 ---
 
-## 💻 5. DEPLOYMENT & STRUKTUR TEKNIS KODE
+## ⚙️ PILAR 2: MEKANISME TEKNIS SCRAPER OTONOM (MENCARI PABRIK, SUPPLIER, & BUYER)
 
-### A. Skema Database Prisma (`prisma/schema.prisma`)
-* `Supplier`: Menampung data Master Stockist Tangerang/Cikarang/Jakarta.
-* `SourcingItem`: Katalog barang industri (50+ items) dengan margin 8%.
-* `BrokerDeal`: Pelacak status transaksi, nominal DP 50%, dan profit bersih.
+AgentFlow menggunakan 3 jenis **Bot Scraper Khusus** yang bekerja otomatis 24 jam untuk menyisir pasar Indonesia:
 
-### B. File Kunci Sistem:
-1. **Background Engine Loop:** `scripts/brokerage-engine.js` (PM2 App: `agentflow-broker-engine`).
-2. **API Endpoint Loop:** `src/app/api/brokerage/run-loop/route.ts`.
-3. **API Sourcing Matrix:** `src/app/api/sourcing-matrix/route.ts`.
-4. **UI Dashboard & PDF Generator:** `src/app/sourcing-matrix/page.tsx`.
+### 1. Scraper Sinyal Kebutuhan Pabrik (*Demand Signal Scraper*)
+Bagaimana AI tahu pabrik A sedang butuh barang tertentu?
+* **Pencarian via Portal Lowongan Kerja (Job Board Parsing):**
+  * *Logika AI:* Jika pabrik membuka lowongan *"Teknisi Mesin Injection Mold"*, AI menyimpulkan pabrik tersebut membutuhkan *Sparepart & Oli Mesin Injection*.
+  * Jika pabrik membuka lowongan *"Staff Gudang & Packing"*, AI menyimpulkan pabrik sedang kebanjiran order dan butuh *Stretch Film, Lakban, & Kardus*.
+* **Pencarian via Portal E-Procurement & Tender B2B (LPSE / B2B Portals):**
+  * AI menyisir daftar dokumen lelang/pengadaan barang habis pakai (*consumables*) pabrik swasta dan BUMN.
+
+### 2. Scraper Supplier Pusat & Master Stockist (*Supply Sourcing Scraper*)
+Bagaimana AI menemukan supplier produsen terdekat dan termurah?
+* **Target Scraping:** Indonetwork.co.id, Direktori Produsen Kemenperin, Tokopedia/Shopee B2B Wholesale, YellowPages Industri.
+* **Filter Logika AI:** AI menyaring supplier berdasarkan lokasi kota (misal: Tangerang/Jakarta/Surabaya), mengekstrak kontak WhatsApp Sales, serta mencatat **Harga Modal HPP & MOQ (Minimum Order)** ke database *Sourcing Matrix*.
+
+### 3. Bot Outreach Pembeli Otonom (*Buyer Acquisition Engine*)
+* AI secara otomatis menyisir direktori Google Maps kawasan industri (Cikande, KIEC, Cikarang, Karawang).
+* AI mengekstrak email/nomor WhatsApp tim *Procurement / Purchasing / General Affairs (GA)* pabrik.
+* AI mengirimkan draf **Surat Perkenalan Vendor Cadangan + Katalog Penawaran Pembanding (PDF)** secara berkala.
+
+---
+
+## 💳 PILAR 3: ANATOMI KEUANGAN DETIL & MANAJEMEN RISIKO FINANSIAL
+
+Bagian ini adalah **bagian paling rawan**. AgentFlow dirancang dengan **Sistem Keamanan Finansial (Financial Risk Guard)** yang ketat agar Anda **BEBAS DARI RISIKO KERUGIAN & BEBAS MODAL PRIBADI**.
+
+### A. Formula Matematika Modal Rp 0 (Skema DP 50%)
+Untuk memastikan Anda **TIDAK PERNAH** menggunakan uang pribadi sepeser pun, AgentFlow mengunci batas minimal DP dari pembeli menggunakan rumus keselamatan:
+
+$$\text{DP Min \%} = \left( \frac{\text{Harga Modal HPP Supplier}}{\text{Harga Penawaran ke Pembeli}} \right) \times 100\% + 5\%$$
+
+* **Contoh Riil Transaksi:**
+  * Pesanan Pabrik Pembeli : **Rp 10.000.000** (500 Roll Stretch Film)
+  * Syarat DP dari AZIZ    : **50% = Rp 5.000.000** (Masuk ke Rekening Pribadi AZIZ)
+  * Modal HPP ke Supplier : **Rp 4.150.000** (Margin AZIZ = 8% / Rp 850.000)
+  * **Penggunaan Dana:** Dari DP Rp 5.000.000 tersebut, AZIZ mentransfer **Rp 4.150.000** untuk melunasi Supplier.
+  * **Sisa di Rekening AZIZ:** **Rp 850.000 (Sisa DP / Keuntungan Bersih Langsung Dipegang)**.
+  * **Pelunasan Sisa 50% (Rp 5.000.000):** Ditransfer pembeli saat barang sampai di lokasi.
+
+> **KESIMPULAN FINANSIAL:** Uang DP 50% dari pembeli **SELALU LEBIH BESAR** daripada tagihan supplier. Anda memegang profit bersih sejak hari pertama transaksi tanpa mengeluarkan modal pribadi 1 perak pun!
+
+### B. Prosedur Keamanan Pajak & Bank
+1. **Rekening Bank:** Menggunakan **Rekening Bank Pribadi AZIZ** (BCA/Mandiri/BRI). Transaksi perorangan B2B di bawah Rp 500 juta/bulan sah dan aman secara hukum.
+2. **Pajak:** Pembukuan dicatat sebagai Penghasilan Perorangan / PPh Final UMKM (0.5% dari omset) yang dilaporkan saat SPT Tahunan.
+
+### C. Prosedur Penanganan Piutang Macet / Bad Debt
+* **Aturan Mutlak:** **TIDAK ADA SKEMA TEMPO 30 HARI** untuk pabrik baru.
+* Semua transaksi awal **WAJIB DP 50% + Pelunasan 50% Cash Against Delivery (CAD)** saat truk barang tiba di pabrik pembeli.
 
 ---
 
-## 🚀 6. TATA CARA MENJALANKAN DI DUNIA NYATA
+## 🏢 PILAR 4: ALUR EKSEKUSI LAPANGAN DUNIA NYATA (LANGKAH 1 S/D 10)
 
-1. **Jalankan Aplikasi:**
-   ```cmd
-   npm run dev
-   ```
-2. **Buka Dashboard Sourcing:**
-   Buka `http://localhost:3000/sourcing-matrix`
-3. **Auto-Populate 50+ Barang:**
-   Klik tombol **`🤖 Auto-Sourcing (50+ Barang)`** untuk mengisi katalog otonom.
-4. **Jalankan Engine Otonom:**
-   Klik tombol **`⚡ Picu Loop Engine Otonom`** (atau biarkan PM2 mengeksekusi `scripts/brokerage-engine.js` di background 24 jam).
-5. **Eksekusi Penawaran:**
-   Cetak Surat Penawaran PDF (Format Perorangan AZIZ) dan kirimkan ke tim Purchasing pabrik target.
+Berikut adalah urutan kejadian riil di lapangan dari detik pertama sinyal ditemukan hingga uang masuk ke kantong Anda:
+
+```
+[LANGKAH 1] Scraper AI menemukan sinyal pabrik & kontak Purchasing di Cikande.
+    ↓
+[LANGKAH 2] Purchasing Agent AI menyebarkan RFQ ke 10 Master Stockist Tangerang.
+    ↓
+[LANGKAH 3] Sourcing Matrix mengunci harga modal termurah & menghitung margin 8%.
+    ↓
+[LANGKAH 4] Marketing Agent AI menerbitkan Surat Penawaran (PDF AZIZ) + DP 50%.
+    ↓
+[LANGKAH 5] Pabrik Pembeli menyetujui dan menerbitkan Purchase Order (PO) resmi.
+    ↓
+[LANGKAH 6] Pabrik Pembeli mentransfer DP 50% ke Rekening Bank Pribadi AZIZ.
+    ↓
+[LANGKAH 7] AZIZ/AgentFlow melunasi modal HPP ke Supplier menggunakan uang DP.
+    ↓
+[LANGKAH 8] Supplier meluncurkan truk pengiriman dengan Surat Jalan Polos (Blind Shipping).
+    ↓
+[LANGKAH 9] Barang dibongkar di pabrik, Tim Gudang mengecek & menandatangani BAST.
+    ↓
+[LANGKAH 10] Pabrik mentransfer pelunasan 50% sisa. Transaksi SELESAI 100%.
+```
 
 ---
-*Dokumen ini merupakan panduan master permanen untuk AgentFlow B2B Brokerage Engine.*
+
+## 🎯 STATUS PERENCANAAN CURRENT
+
+1. **Visi Ekspansi:** Terkunci untuk skala Nasional (Indonesia).
+2. **Keuangan:** Terkunci murni Modal Rp 0 via DP 50% & Rekening Pribadi AZIZ.
+3. **Otomasi:** Terkunci Closed-Loop Engineering 24 Jam.
+
+*Dokumen Master Blueprint 2.0 ini resmi menjadi acuan utama pengembangan sistem AgentFlow B2B Brokerage Engine.*
