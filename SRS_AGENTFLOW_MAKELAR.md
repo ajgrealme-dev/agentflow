@@ -1,6 +1,6 @@
 ﻿# 📋 SOFTWARE REQUIREMENT SPECIFICATION (SRS)
 ## AGENTFLOW B2B AUTOMATED BROKERAGE ENGINE
-## Versi: 1.0.0 | Status: APPROVED
+## Versi: 2.0.0 | Status: APPROVED (SECOND BRAIN & SCHEDULE INTEGRATED)
 
 ---
 
@@ -23,14 +23,18 @@
 * **Aturan:** Dokumen penawaran dan pesan outreach **WAJIB** mencantumkan nama perorangan: **AZIZ (Independent Industrial Sourcing Specialist)**.
 * **Rekening Pembayaran:** **Bank Mandiri (Livin' Gold) a.n. AZIZ**.
 
+### BR5. Aturan Second Brain & Long-Context Memory (Machine Learning)
+* **Aturan:** AI wajib merekam histori interaksi, tingkat konversi penawaran, dan reputasi supplier ke database *AgentMemoryLog*.
+* **Tujuan:** Seiring berjalannya waktu, AI mampu menyesuaikan strategi penawaran dan menambah katalog barang industri baru secara otonom tanpa klik tombol manual.
+
 ---
 
 ## ⚙️ 2. PERSYARATAN FUNGSIONAL (FUNCTIONAL REQUIREMENTS)
 
 | ID Req | Modul | Deskripsi Persyaratan Fungsional |
 | :--- | :--- | :--- |
-| **FR-01** | Sourcing Matrix | Sistem harus menyediakan API & UI untuk menyimpan data `Supplier`, `SourcingItem`, dan `BrokerDeal`. |
-| **FR-02** | Auto-Populate | Sistem harus mampu mengimpor 50+ barang industri realistis dengan margin 8% dalam 1 klik. |
+| **FR-01** | Second Brain | Sistem harus menyediakan memori jangka panjang (RAG / Knowledge Graph) untuk mencatat pola kebiasaan pembeli & supplier. |
+| **FR-02** | Schedule Engine | Sistem harus berjalan otomatis 24/7 menggunakan timer jadwal (*Schedule / Cron*) tanpa tergantung klik tombol UI. |
 | **FR-03** | Quotation PDF | Sistem harus mampu menghasilkan Surat Penawaran Resmi berformat PDF (Printable) atas nama AZIZ. |
 | **FR-04** | Loop Engine | Sistem background daemon (`scripts/brokerage-engine.js`) harus berputar 24/7 di bawah pengawasan PM2. |
 | **FR-05** | Deep Scraper | Sistem harus mendukung ekstraksi kontak pabrik multi-touch (Maps → Web → LinkedIn/WA). |
@@ -39,6 +43,6 @@
 
 ## ⚡ 3. PERSYARATAN NON-FUNGSIONAL (NON-FUNCTIONAL REQUIREMENTS)
 
-* **NFR-01 (Kinerja):** Waktu kompilasi dan pembuatan draf Quotation PDF harus di bawah **2 detik**.
-* **NFR-02 (Keandalan):** Daemon Loop Engineering harus memiliki fitur `autorestart: true` di PM2 agar otomatis pulih saat server reboot.
-* **NFR-03 (Skalabilitas):** Database Sourcing Matrix harus mampu menampung hingga **10.000+ data barang** dari seluruh kawasan industri Indonesia.
+* **NFR-01 (Kinerja):** Waktu pengambilan ingatan dari Second Brain RAG harus di bawah **500 ms**.
+* **NFR-02 (Keandalan):** Schedule & Loop Engine harus memiliki fitur `autorestart: true` di PM2 agar otomatis pulih saat server reboot.
+* **NFR-03 (Skalabilitas):** Knowledge Graph Second Brain harus mampu menampung ingatan pola transaksi dari ribuan pabrik di Indonesia.

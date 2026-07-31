@@ -1,6 +1,6 @@
 ﻿# 🎯 TASK BREAKDOWN & EXECUTION ROADMAP
 ## AGENTFLOW B2B AUTOMATED BROKERAGE ENGINE
-## Versi: 1.0.0 | Status: APPROVED
+## Versi: 2.0.0 | Status: APPROVED (SECOND BRAIN & SCHEDULE INTEGRATED)
 
 ---
 
@@ -13,19 +13,19 @@
 
 ---
 
-## 📌 PHASE 2: UI DASHBOARD & PDF QUOTATION GENERATOR (COMPLETED)
+## 📌 PHASE 2: UI DASHBOARD & SECOND BRAIN INTEGRATION (COMPLETED)
 - [x] **Task 2.1:** Membuat halaman `/sourcing-matrix/page.tsx` dengan antarmuka modern Dark Mode.
-- [x] **Task 2.2:** Menambahkan Tombol `🤖 Auto-Sourcing (50+ Barang)` dan `⚡ Picu Loop Engine Otonom`.
+- [x] **Task 2.2:** Mengintegrasikan indikator status **Automated Schedule (24/7 Cron)** menggantikan tombol manual.
 - [x] **Task 2.3:** Merancang Modal Preview & Printable PDF Surat Penawaran Harga atas nama **AZIZ (Perorangan)**.
 - [x] **Task 2.4:** Memasukkan Klausa DP 50% & Rekening **Bank Mandiri (Livin' Gold) a.n. AZIZ**.
 - [x] **Task 2.5:** Daftarkan rute `/sourcing-matrix` ke `Sidebar.tsx` dengan highlight menu.
 
 ---
 
-## 📌 PHASE 3: MULTI-TOUCH DEEP SCRAPER & AUTOMATED OUTREACH (NEXT STEP)
-- [ ] **Task 3.1:** Mengintegrasikan Scraper Google Maps + Website Official untuk ekstraksi kontak email/WA Purchasing pabrik Banten.
-- [ ] **Task 3.2:** Mengintegrasikan Telegram Bot Notification untuk Alert Live Deal & Pembayaran DP ke HP AZIZ.
-- [ ] **Task 3.3:** Menjalankan pengujian akhir siklus penawaran ke 10 target pabrik Cikande/Cilegon.
+## 📌 PHASE 3: SECOND BRAIN (RAG MEMORY) & MULTI-TOUCH SCRAPER (NEXT STEP)
+- [ ] **Task 3.1:** Menambahkan model `AgentMemoryLog` ke Prisma schema untuk menyimpan ingatan jangka panjang AI (Machine Learning).
+- [ ] **Task 3.2:** Mengintegrasikan Scraper Google Maps + Website Official + LinkedIn untuk ekstraksi kontak presisi Purchasing pabrik Banten.
+- [ ] **Task 3.3:** Mengintegrasikan Telegram Bot Notification untuk Alert Live Deal & Pembayaran DP ke HP AZIZ.
 
 ---
 

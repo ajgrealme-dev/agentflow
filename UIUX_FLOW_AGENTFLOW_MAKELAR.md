@@ -1,6 +1,6 @@
 ﻿# 🎨 UI/UX FLOW & WIREFRAME SPECIFICATION
 ## AGENTFLOW B2B AUTOMATED BROKERAGE ENGINE
-## Versi: 1.0.0 | Status: APPROVED
+## Versi: 2.0.0 | Status: APPROVED (SECOND BRAIN & SCHEDULE UI INTEGRATED)
 
 ---
 
@@ -9,12 +9,11 @@
 ```
 [Main Navigation Sidebar]
  ├── 📊 Dashboard Utama (Overview Performance)
- ├── 🤖 Meja Kerja / Workbench (Agent Monitoring)
+ ├── 🤖 Meja Kerja / Workbench (Second Brain Memory Monitor)
  ├── 💬 Chatbot Command (/command)
  └── 💼 Makelar B2B - Sourcing Matrix (/sourcing-matrix) [HIGHLIGHT HIJAU]
-      ├── ⚡ Tombol "Picu Loop Engine Otonom"
-      ├── 🤖 Tombol "Auto-Sourcing (50+ Barang)"
-      ├── 📝 Form Tambah Barang Sourcing Manual
+      ├── ⏰ Indikator Status "Automated Schedule Engine Active (24/7)"
+      ├── 🧠 Monitor "Second Brain Memory & Knowledge Graph Activity"
       ├── 📋 Tabel Katalog Sourcing Matrix & Margin Rahasia
       └── 📄 Modal Preview & Cetak PDF Surat Penawaran (AZIZ Branding)
 ```
@@ -25,13 +24,14 @@
 
 ### A. Color Palette & Badges:
 * **Primary Theme:** Dark Mode Premium (Slate 950 / Emerald 900 / Teal 900).
-* **Badge Status Keuangan:**
-  * `Margin Tipis 5-8% (Volume Murah)` -> Badge Emerald.
-  * `Modal Rp 0 (Skema DP 50%)` -> Badge Blue.
+* **Badge Status Keuangan & Otonomi:**
+  * `Schedule Engine Active (24/7 Cron)` -> Badge Emerald Pulsing.
+  * `Second Brain Memory (Machine Learning)` -> Badge Purple.
+  * `Margin Tipis 5-8% (Volume Murah)` -> Badge Teal.
   * `Format Perorangan (AZIZ)` -> Badge Amber.
 
 ### B. Layout Halaman `/sourcing-matrix`:
-1. **Header Banner:** Judul besar, deskripsi sistem, dan 3 tombol aksi (Picu Loop Engine, Auto-Sourcing 50+, Refresh).
-2. **Kolom Kiri (Form Input):** Input Nama Supplier, Nama Barang Industri, Kategori, Modal HPP, Margin %, dan Live Profit Preview.
-3. **Kolom Kanan (Tabel Sourcing):** Tabel responsif yang menampilkan Nama Barang, Supplier, Modal HPP, Harga Penawaran, Profit Bersih, dan Tombol **`Cetak Penawaran`**.
-4. **Modal Preview Quotation (Printable PDF):** Tampilan surat resmi penawaran perorangan atas nama **AZIZ** lengkap dengan rincian barang, klausa DP 50%, dan **Bank Mandiri Livin' Gold a.n. AZIZ**.
+1. **Header Banner:** Judul besar, deskripsi sistem, indikator status jadwal otomatis (*Cron Active*), dan indikator *Second Brain Memory*.
+2. **Kolom Kanan (Tabel Sourcing Matrix):** Tabel responsif yang menampilkan Nama Barang, Supplier, Modal HPP, Harga Penawaran Murah (8%), Profit Bersih, dan Tombol **`Cetak Penawaran`**.
+3. **Kolom Kiri (Second Brain Memory & Activity Log):** Panel yang menampilkan ingatan jangka panjang AI (kebiasaan pabrik pembeli, histori deal sukses, dan rekomendasi margin otomatis).
+4. **Modal Preview Quotation (Printable PDF):** Tampilan surat resmi penawaran perorangan atas nama **AZIZ** lengkap dengan rincian barang, klausa DP 50%, dan **Bank Mandiri (Livin' Gold) a.n. AZIZ**.
