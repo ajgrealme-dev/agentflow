@@ -36,6 +36,10 @@ model Company {
   suppliers         Supplier[]
   sourcingItems     SourcingItem[]
   brokerDeals       BrokerDeal[]
+  
+  // Second Brain
+  agentMemoryLogs      AgentMemoryLog[]
+  knowledgeGraphItems  KnowledgeGraphItem[]
 }
 
 model User {
@@ -359,4 +363,31 @@ model BrokerDeal {
   updatedAt       DateTime       @updatedAt
 }
 
+// ==========================================
+// SECOND BRAIN (LONG-CONTEXT MEMORY & ML)
+// ==========================================
 
+model AgentMemoryLog {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  entityType  String   // BUYER atau SUPPLIER
+  entityName  String   // Nama Pabrik atau Supplier
+  memoryType  String   // PREFERENCE, PAYMENT_SPEED, DISPOSAL_REPUTATION
+  content     String   @db.Text // Teks ingatan jangka panjang AI
+  weight      Float    @default(1.0) // Bobot pentingnya ingatan
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model KnowledgeGraphItem {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  itemName    String   // Nama barang yang ditemukan mandiri oleh AI
+  category    String
+  estBaseCost Float
+  marginPct   Float    @default(8.0)
+  autoSourced Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { 
@@ -183,14 +183,16 @@ export default function SourcingMatrixPage() {
         </div>
 
         <div className="flex items-center space-x-3">
-          <button 
-            onClick={handleTriggerLoopEngine}
-            disabled={runningLoop}
-            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow-lg shadow-emerald-900/40 text-sm disabled:opacity-50"
-          >
-            <Play className={`w-4 h-4 ${runningLoop ? 'animate-spin' : ''}`} />
-            <span>{runningLoop ? 'Mengeksekusi Loop...' : '⚡ Picu Loop Engine Otonom'}</span>
-          </button>
+          <div className="flex flex-col space-y-1">
+            <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold rounded-lg shadow-inner">
+              <Zap className="w-3 h-3 animate-pulse text-indigo-400" />
+              <span>Cron Schedule: Active (24/7)</span>
+            </span>
+            <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold rounded-lg shadow-inner">
+              <Sparkles className="w-3 h-3 text-purple-400" />
+              <span>Second Brain: Analyzing</span>
+            </span>
+          </div>
 
           <button 
             onClick={handleAutoPopulate}
