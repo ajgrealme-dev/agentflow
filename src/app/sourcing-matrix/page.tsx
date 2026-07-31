@@ -12,7 +12,8 @@ import {
   Printer,
   FileText,
   X,
-  Zap
+  Zap,
+  Play
 } from 'lucide-react';
 
 export default function SourcingMatrixPage() {
@@ -20,12 +21,13 @@ export default function SourcingMatrixPage() {
   const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [autoPopulating, setAutoPopulating] = useState(false);
+  const [runningLoop, setRunningLoop] = useState(false);
 
   // Form State untuk Tambah Item Baru
   const [itemName, setItemName] = useState('');
   const [category, setCategory] = useState('Packaging & Kemasan');
   const [baseCost, setBaseCost] = useState('');
-  const [marginPct, setMarginPct] = useState('8'); // Margin tipis 8%
+  const [marginPct, setMarginPct] = useState('8');
   const [supplierName, setSupplierName] = useState('');
   const [supplierCity, setSupplierCity] = useState('Tangerang');
 
@@ -74,6 +76,26 @@ export default function SourcingMatrixPage() {
       console.error('Error auto populating sourcing matrix:', err);
     } finally {
       setAutoPopulating(false);
+    }
+  };
+
+  const handleTriggerLoopEngine = async () => {
+    setRunningLoop(true);
+    try {
+      const res = await fetch('/api/brokerage/run-loop', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message || 'Siklus Otonom Loop Engineering Berhasil Dijalankan!');
+        fetchMatrix();
+      } else {
+        alert(data.message || data.error || 'Gagal memicu Loop Engine.');
+      }
+    } catch (err) {
+      console.error('Error triggering loop engine:', err);
+    } finally {
+      setRunningLoop(false);
     }
   };
 
@@ -143,39 +165,47 @@ export default function SourcingMatrixPage() {
         <div>
           <div className="flex items-center space-x-2">
             <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold rounded-full uppercase tracking-wider">
-              B2B Brokerage Engine
+              Loop Engineering Closed-Loop
             </span>
             <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold rounded-full uppercase tracking-wider">
-              Margin Tipis 5-8% (Volume Murah)
+              Margin Tipis 8%
             </span>
             <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold rounded-full uppercase tracking-wider">
-              Format Perorangan (AZIZ)
+              AZIZ (Perorangan)
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-white mt-2">
-            Sourcing Matrix & Auto-Quotation Engine
+            Mesin Makelar Otonom & Dashboard Sourcing
           </h1>
           <p className="text-slate-300 text-sm mt-1">
-            Mesin otonom katalog barang industri, kalkulasi margin tipis, dan generator penawaran perorangan modal Rp 0.
+            Eksekusi otonom 24/7 (Perceive → Reason → Act → Evaluate) tanpa perlu interaksi manual.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
+          <button 
+            onClick={handleTriggerLoopEngine}
+            disabled={runningLoop}
+            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow-lg shadow-emerald-900/40 text-sm disabled:opacity-50"
+          >
+            <Play className={`w-4 h-4 ${runningLoop ? 'animate-spin' : ''}`} />
+            <span>{runningLoop ? 'Mengeksekusi Loop...' : '⚡ Picu Loop Engine Otonom'}</span>
+          </button>
+
           <button 
             onClick={handleAutoPopulate}
             disabled={autoPopulating}
             className="flex items-center space-x-2 px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition shadow-lg shadow-amber-900/30 text-sm disabled:opacity-50"
           >
             <Zap className={`w-4 h-4 ${autoPopulating ? 'animate-bounce' : ''}`} />
-            <span>{autoPopulating ? 'Mengolah 50+ Barang...' : '🤖 Auto-Sourcing (50+ Barang)'}</span>
+            <span>{autoPopulating ? 'Mengolah Barang...' : '🤖 Auto-Sourcing (50+ Barang)'}</span>
           </button>
 
           <button 
             onClick={fetchMatrix}
-            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl transition shadow-lg shadow-emerald-900/30 text-sm"
+            className="flex items-center space-x-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl transition text-sm"
           >
             <RotateCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refresh</span>
           </button>
         </div>
       </div>
@@ -289,8 +319,38 @@ export default function SourcingMatrixPage() {
           </form>
         </div>
 
-        {/* Matrix Display Table */}
+        {/* Matrix Display Table & Executed Deals */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Recent Loop Executed Deals */}
+          {deals.length > 0 && (
+            <div className="bg-emerald-950/20 border border-emerald-500/30 rounded-2xl p-6 shadow-lg space-y-3">
+              <h2 className="text-sm font-bold text-emerald-400 flex items-center justify-between">
+                <span className="flex items-center space-x-2">
+                  <Play className="w-4 h-4 text-emerald-400" />
+                  <span>Transaksi Penawaran Otonom Hasil Loop Engineering Terakhir</span>
+                </span>
+                <span className="text-xs text-emerald-300 font-mono font-normal">
+                  Total Executed: {deals.length} Deal
+                </span>
+              </h2>
+
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {deals.map((deal: any) => (
+                  <div key={deal.id} className="p-3 bg-slate-900/90 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-white">{deal.buyerName} <span className="text-slate-500 font-normal">({deal.buyerCity})</span></div>
+                      <div className="text-slate-400">{deal.sourcingItem?.name || 'Barang Industri'} • Qty: {deal.quantity} unit</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold text-emerald-400 font-mono">Penawaran: Rp {deal.totalSellingVal.toLocaleString()}</div>
+                      <div className="text-emerald-300 font-mono font-bold">Profit: +Rp {deal.grossProfit.toLocaleString()}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-lg">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center justify-between">
               <span className="flex items-center space-x-2">
@@ -313,7 +373,7 @@ export default function SourcingMatrixPage() {
                 </button>
               </div>
             ) : (
-              <div className="overflow-x-auto max-h-[500px]">
+              <div className="overflow-x-auto max-h-[400px]">
                 <table className="w-full text-left border-collapse">
                   <thead className="sticky top-0 bg-slate-900">
                     <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
@@ -363,16 +423,16 @@ export default function SourcingMatrixPage() {
           <div className="p-5 bg-slate-900 border border-slate-800 rounded-2xl flex items-start space-x-4">
             <ShieldCheck className="w-8 h-8 text-emerald-400 flex-shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-white">Strategi Volume Tinggi x Margin Tipis (Perorangan)</h3>
+              <h3 className="text-sm font-bold text-white">Loop Engineering Closed-Loop Architecture</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Dengan margin tipis (5-8%), harga penawaran Anda dijamin paling murah dan kompetitif di Banten. Pembeli ditawarkan skema **DP 50% ke Rekening Bank Pribadi Anda (AZIZ)** untuk melunasi 100% modal awal supplier, sehingga modal Anda murni Rp 0.
+                Mesin otonom berputar 24 jam mengeksekusi siklus **Perceive → Reason → Act → Evaluate**. Semua transaksi dicatat atas nama **AZIZ (Perorangan)** dengan jaminan DP 50% untuk modal Rp 0.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal Preview Surat Penawaran (PDF Printable) - FORMAT PERORANGAN */}
+      {/* Modal Preview Surat Penawaran (PDF Printable) */}
       {showQuotationPreview && selectedItemForQuotation && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 print:p-0 print:bg-white print:static">
           <div className="bg-white text-slate-900 w-full max-w-3xl rounded-2xl p-8 shadow-2xl space-y-6 overflow-y-auto max-h-[90vh] print:max-h-none print:shadow-none print:rounded-none">
@@ -478,7 +538,6 @@ export default function SourcingMatrixPage() {
                 </tbody>
               </table>
 
-              {/* Ketentuan Pembayaran */}
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-2 text-xs">
                 <div className="font-bold text-slate-900 uppercase">Syarat & Ketentuan Pembayaran:</div>
                 <ul className="list-disc list-inside text-slate-700 space-y-1">
@@ -489,7 +548,6 @@ export default function SourcingMatrixPage() {
                 </ul>
               </div>
 
-              {/* Profit Indicator untuk Anda (Hidden when printing) */}
               <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex justify-between items-center text-xs print:hidden">
                 <span className="text-emerald-800 font-medium">Estimasi Keuntungan Bersih Anda dari Transaksi Ini:</span>
                 <span className="font-bold text-emerald-700 text-sm font-mono">+Rp {quoteProfit.toLocaleString()}</span>
