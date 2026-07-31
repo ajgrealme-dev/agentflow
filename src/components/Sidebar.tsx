@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, LayoutGrid, MessageSquare, Wallet, Users, Package,
   Cpu, Scale, Megaphone, Headphones, Target, Bot, Settings, Presentation,
-  ChevronLeft, ChevronRight, ChevronDown, Sun, Moon, LogOut, Zap, ShoppingBag
+  ChevronLeft, ChevronRight, ChevronDown, Sun, Moon, LogOut, Zap, ShoppingBag, ArrowRightLeft
 } from 'lucide-react';
 import { useSidebar } from './SidebarProvider';
 import { useTheme } from './ThemeProvider';
@@ -33,6 +33,7 @@ const navItems: NavItem[] = [
   { href: '/',           icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/command',    icon: MessageSquare,   label: 'Chatbot' },
   { href: '/sourcing-matrix', icon: ShoppingBag, label: 'Makelar B2B (Matrix)', highlight: true },
+  { href: '/finance-ledger',  icon: ArrowRightLeft, label: 'Ledger DP 50% (B2B)' },
   
   // ── 8 CHIEF DIVISIONS WITH FULL TOOLS SUB-MENUS ──────────────
   {
