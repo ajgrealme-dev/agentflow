@@ -11,28 +11,30 @@ import {
   ShieldCheck,
   Printer,
   FileText,
-  X
+  X,
+  Zap
 } from 'lucide-react';
 
 export default function SourcingMatrixPage() {
   const [suppliers, setSuppliers] = useState<any[]>([]);
   const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [autoPopulating, setAutoPopulating] = useState(false);
 
   // Form State untuk Tambah Item Baru
   const [itemName, setItemName] = useState('');
   const [category, setCategory] = useState('Packaging & Kemasan');
   const [baseCost, setBaseCost] = useState('');
-  const [marginPct, setMarginPct] = useState('25');
+  const [marginPct, setMarginPct] = useState('8'); // Margin tipis 8%
   const [supplierName, setSupplierName] = useState('');
   const [supplierCity, setSupplierCity] = useState('Tangerang');
 
   // Modal State untuk Cetak Quotation PDF
   const [selectedItemForQuotation, setSelectedItemForQuotation] = useState<any>(null);
   const [buyerName, setBuyerName] = useState('');
-  const [buyerCity, setBuyerCity] = useState('Cikande, Serang');
+  const [buyerCity, setBuyerCity] = useState('Kawasan Industri Cikande, Serang');
   const [quantity, setQuantity] = useState('500');
-  const [bankAccount, setBankAccount] = useState('BCA 1234567890 a.n NAMA ANDA');
+  const [bankAccount, setBankAccount] = useState('BCA 1234567890 a.n AZIZ');
   const [showQuotationPreview, setShowQuotationPreview] = useState(false);
 
   const fetchMatrix = async () => {
@@ -54,6 +56,26 @@ export default function SourcingMatrixPage() {
   useEffect(() => {
     fetchMatrix();
   }, []);
+
+  const handleAutoPopulate = async () => {
+    setAutoPopulating(true);
+    try {
+      const res = await fetch('/api/sourcing-matrix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'AUTO_POPULATE_50' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message || 'Berhasil mengolah dan mengimpor katalog barang industri!');
+        fetchMatrix();
+      }
+    } catch (err) {
+      console.error('Error auto populating sourcing matrix:', err);
+    } finally {
+      setAutoPopulating(false);
+    }
+  };
 
   const handleCreateQuickItem = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +119,7 @@ export default function SourcingMatrixPage() {
   };
 
   const calculatedCost = parseFloat(baseCost || '0');
-  const calculatedMargin = parseFloat(marginPct || '25');
+  const calculatedMargin = parseFloat(marginPct || '8');
   const calculatedSelling = calculatedCost * (1 + calculatedMargin / 100);
   const estimatedProfitPerUnit = calculatedSelling - calculatedCost;
 
@@ -116,7 +138,7 @@ export default function SourcingMatrixPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8 print:p-0 print:m-0 print:max-w-none">
-      {/* Header (Hidden when printing) */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 p-6 rounded-2xl border border-emerald-500/20 shadow-xl print:hidden">
         <div>
           <div className="flex items-center space-x-2">
@@ -124,33 +146,47 @@ export default function SourcingMatrixPage() {
               B2B Brokerage Engine
             </span>
             <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold rounded-full uppercase tracking-wider">
-              Modal Rp 0 (Skema DP 50%)
+              Margin Tipis 5-8% (Volume Murah)
+            </span>
+            <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold rounded-full uppercase tracking-wider">
+              Format Perorangan (AZIZ)
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-white mt-2">
-            Sourcing Matrix & Auto-Quotation Generator
+            Sourcing Matrix & Auto-Quotation Engine
           </h1>
           <p className="text-slate-300 text-sm mt-1">
-            Kelola katalog supplier pabrik, margin keuntungan rahasia, dan cetak Surat Penawaran Harga (PDF) otomatis.
+            Mesin otonom katalog barang industri, kalkulasi margin tipis, dan generator penawaran perorangan modal Rp 0.
           </p>
         </div>
 
-        <button 
-          onClick={fetchMatrix}
-          className="flex items-center justify-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl transition shadow-lg shadow-emerald-900/30"
-        >
-          <RotateCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-          <span>Refresh Data</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <button 
+            onClick={handleAutoPopulate}
+            disabled={autoPopulating}
+            className="flex items-center space-x-2 px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition shadow-lg shadow-amber-900/30 text-sm disabled:opacity-50"
+          >
+            <Zap className={`w-4 h-4 ${autoPopulating ? 'animate-bounce' : ''}`} />
+            <span>{autoPopulating ? 'Mengolah 50+ Barang...' : '🤖 Auto-Sourcing (50+ Barang)'}</span>
+          </button>
+
+          <button 
+            onClick={fetchMatrix}
+            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl transition shadow-lg shadow-emerald-900/30 text-sm"
+          >
+            <RotateCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
-      {/* Main Content (Hidden when printing) */}
+      {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 print:hidden">
-        {/* Form Tambah Item */}
+        {/* Form Tambah Item Manual */}
         <div className="lg:col-span-1 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-lg space-y-5">
           <h2 className="text-lg font-bold text-white flex items-center space-x-2">
             <Sparkles className="w-5 h-5 text-emerald-400" />
-            <span>Tambah Barang Sourcing Matrix</span>
+            <span>Tambah Barang Sourcing Manual</span>
           </h2>
 
           <form onSubmit={handleCreateQuickItem} className="space-y-4">
@@ -189,7 +225,7 @@ export default function SourcingMatrixPage() {
                   <option value="Packaging & Kemasan">Packaging & Kemasan</option>
                   <option value="APD & K3 Industri">APD & K3 Industri</option>
                   <option value="Sparepart & Mesin">Sparepart & Mesin</option>
-                  <option value="Bahan Baku">Bahan Baku</option>
+                  <option value="Bahan Baku & Pelumas">Bahan Baku & Pelumas</option>
                   <option value="Limbah Industrial">Limbah Industrial</option>
                 </select>
               </div>
@@ -211,7 +247,7 @@ export default function SourcingMatrixPage() {
                 <label className="block text-xs font-medium text-slate-400 mb-1">Harga Modal HPP (Rp)</label>
                 <input
                   type="number"
-                  placeholder="10000"
+                  placeholder="45000"
                   value={baseCost}
                   onChange={(e) => setBaseCost(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
@@ -220,10 +256,10 @@ export default function SourcingMatrixPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1">Target Margin Broker (%)</label>
+                <label className="block text-xs font-medium text-slate-400 mb-1">Margin Tipis (%)</label>
                 <input
                   type="number"
-                  placeholder="25"
+                  placeholder="8"
                   value={marginPct}
                   onChange={(e) => setMarginPct(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
@@ -234,7 +270,7 @@ export default function SourcingMatrixPage() {
             {calculatedCost > 0 && (
               <div className="p-4 bg-emerald-950/30 border border-emerald-500/20 rounded-xl space-y-1">
                 <div className="flex justify-between text-xs text-slate-400">
-                  <span>Harga Penawaran ke Pembeli:</span>
+                  <span>Harga Penawaran Murah:</span>
                   <span className="font-bold text-emerald-400">Rp {calculatedSelling.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-xs text-slate-400">
@@ -248,7 +284,7 @@ export default function SourcingMatrixPage() {
               type="submit"
               className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow-lg shadow-emerald-900/40"
             >
-              Simpan ke Sourcing Matrix
+              Simpan Barang
             </button>
           </form>
         </div>
@@ -256,23 +292,34 @@ export default function SourcingMatrixPage() {
         {/* Matrix Display Table */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-lg">
-            <h2 className="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-              <Building2 className="w-5 h-5 text-emerald-400" />
-              <span>Daftar Sourcing Matrix & Generator Penawaran</span>
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center justify-between">
+              <span className="flex items-center space-x-2">
+                <Building2 className="w-5 h-5 text-emerald-400" />
+                <span>Katalog Sourcing Matrix Otonom</span>
+              </span>
+              <span className="text-xs font-normal text-slate-400">
+                Total: <strong className="text-emerald-400">{suppliers.reduce((acc, s) => acc + s.sourcingItems.length, 0)}</strong> Barang
+              </span>
             </h2>
 
             {suppliers.length === 0 ? (
-              <div className="text-center py-12 text-slate-500">
-                Belum ada barang di Sourcing Matrix. Tambahkan barang pertama Anda di sebelah kiri!
+              <div className="text-center py-12 text-slate-500 space-y-3">
+                <p>Belum ada barang di Sourcing Matrix.</p>
+                <button
+                  onClick={handleAutoPopulate}
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-xl shadow"
+                >
+                  🤖 Klik Di Sini untuk Auto-Import 50+ Barang
+                </button>
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-h-[500px]">
                 <table className="w-full text-left border-collapse">
-                  <thead>
+                  <thead className="sticky top-0 bg-slate-900">
                     <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
                       <th className="py-3 px-4">Nama Barang</th>
-                      <th className="py-3 px-4 text-right">Modal (HPP)</th>
-                      <th className="py-3 px-4 text-right">Harga Penawaran</th>
+                      <th className="py-3 px-4 text-right">Modal HPP</th>
+                      <th className="py-3 px-4 text-right">Harga Jual Murah</th>
                       <th className="py-3 px-4 text-right">Profit Makelar</th>
                       <th className="py-3 px-4 text-center">Aksi</th>
                     </tr>
@@ -302,7 +349,7 @@ export default function SourcingMatrixPage() {
                             className="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600 border border-blue-500/30 text-blue-300 hover:text-white text-xs font-semibold rounded-lg transition flex items-center justify-center space-x-1 mx-auto"
                           >
                             <FileText className="w-3.5 h-3.5" />
-                            <span>Cetak Penawaran</span>
+                            <span>Penawaran</span>
                           </button>
                         </td>
                       </tr>
@@ -316,24 +363,24 @@ export default function SourcingMatrixPage() {
           <div className="p-5 bg-slate-900 border border-slate-800 rounded-2xl flex items-start space-x-4">
             <ShieldCheck className="w-8 h-8 text-emerald-400 flex-shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-white">Skema Keamanan Modal Rp 0 (DP 50% Guarantee)</h3>
+              <h3 className="text-sm font-bold text-white">Strategi Volume Tinggi x Margin Tipis (Perorangan)</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Setiap Surat Penawaran (Quotation) yang dicetak mencantumkan syarat **DP 50% ke Rekening Bank Pribadi Anda**. Uang DP 50% ini secara matematis selalu cukup untuk melunasi 100% modal awal ke supplier, sehingga Anda tidak mengeluarkan modal sepeser pun.
+                Dengan margin tipis (5-8%), harga penawaran Anda dijamin paling murah dan kompetitif di Banten. Pembeli ditawarkan skema **DP 50% ke Rekening Bank Pribadi Anda (AZIZ)** untuk melunasi 100% modal awal supplier, sehingga modal Anda murni Rp 0.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal Preview Surat Penawaran (PDF Printable) */}
+      {/* Modal Preview Surat Penawaran (PDF Printable) - FORMAT PERORANGAN */}
       {showQuotationPreview && selectedItemForQuotation && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 print:p-0 print:bg-white print:static">
           <div className="bg-white text-slate-900 w-full max-w-3xl rounded-2xl p-8 shadow-2xl space-y-6 overflow-y-auto max-h-[90vh] print:max-h-none print:shadow-none print:rounded-none">
-            {/* Modal Controls (Hidden when printing) */}
+            {/* Controls */}
             <div className="flex justify-between items-center border-b pb-4 print:hidden">
               <span className="font-bold text-slate-700 flex items-center space-x-2">
                 <FileText className="w-5 h-5 text-emerald-600" />
-                <span>Preview Surat Penawaran Resmi (Quotation PDF)</span>
+                <span>Surat Penawaran Perorangan (PDF Printable)</span>
               </span>
               <div className="flex items-center space-x-3">
                 <button
@@ -352,15 +399,15 @@ export default function SourcingMatrixPage() {
               </div>
             </div>
 
-            {/* Document Configuration Form (Hidden when printing) */}
+            {/* Form Config */}
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs print:hidden">
               <div>
-                <label className="font-bold text-slate-600 block mb-1">Nama Pabrik Pembeli Target</label>
+                <label className="font-bold text-slate-600 block mb-1">Pabrik Pembeli Target</label>
                 <input
                   type="text"
                   value={buyerName}
                   onChange={(e) => setBuyerName(e.target.value)}
-                  placeholder="Contoh: PT Nikomas Gemilang"
+                  placeholder="PT Nikomas Gemilang"
                   className="w-full bg-white border border-slate-300 rounded-lg p-2 text-slate-800"
                 />
               </div>
@@ -374,7 +421,7 @@ export default function SourcingMatrixPage() {
                 />
               </div>
               <div>
-                <label className="font-bold text-slate-600 block mb-1">Rekening Bank Transfer DP</label>
+                <label className="font-bold text-slate-600 block mb-1">Rekening Bank Pribadi Anda</label>
                 <input
                   type="text"
                   value={bankAccount}
@@ -384,29 +431,29 @@ export default function SourcingMatrixPage() {
               </div>
             </div>
 
-            {/* PRINTABLE DOKUMEN RESMI B2B QUOTATION */}
+            {/* PRINTABLE DOKUMEN RESMI B2B PERORANGAN */}
             <div className="border border-slate-200 p-8 rounded-xl space-y-6 font-sans text-slate-800 print:border-none print:p-0">
               <div className="flex justify-between items-start border-b border-slate-300 pb-6">
                 <div>
                   <h2 className="text-2xl font-black text-slate-900 tracking-wide uppercase">SURAT PENAWARAN HARGA</h2>
-                  <p className="text-xs text-slate-500 font-mono">No. Ref: QT/{new Date().getFullYear()}/001</p>
+                  <p className="text-xs text-slate-500 font-mono">Ref: QT-IND/{new Date().getFullYear()}/001</p>
                   <p className="text-xs text-slate-500">Tanggal: {new Date().toLocaleDateString('id-ID', { dateStyle: 'full' })}</p>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-slate-900 text-lg">MITRA SUPPLY INDUSTRI</div>
-                  <div className="text-xs text-slate-600">Penyedia Perlengkapan & Material Industri</div>
+                  <div className="font-bold text-slate-900 text-lg">AZIZ</div>
+                  <div className="text-xs text-slate-600">Independent Industrial Sourcing (Perorangan)</div>
                   <div className="text-xs text-slate-500">Serang, Banten • WA: 0812-XXXX-XXXX</div>
                 </div>
               </div>
 
               <div className="text-sm">
                 <div className="text-xs text-slate-500 uppercase font-semibold">Kepada Yth:</div>
-                <div className="font-bold text-slate-900 text-base">{buyerName || 'Tim Procurement / Purchasing Pabrik'}</div>
+                <div className="font-bold text-slate-900 text-base">{buyerName || 'Tim Purchasing Pabrik'}</div>
                 <div className="text-xs text-slate-600">{buyerCity}</div>
               </div>
 
               <p className="text-xs text-slate-700 leading-relaxed">
-                Dengan hormat, bersama surat ini kami bermaksud menyampaikan penawaran harga resmi untuk kebutuhan material industri perusahaan Anda dengan rincian sebagai berikut:
+                Dengan hormat, saya Aziz bertindak sebagai Independent Sourcing Specialist di wilayah Banten bermaksud menyampaikan penawaran harga grosir langsung untuk kebutuhan material industri perusahaan Anda sebagai berikut:
               </p>
 
               <table className="w-full text-left text-xs border-collapse border border-slate-300">
@@ -437,14 +484,14 @@ export default function SourcingMatrixPage() {
                 <ul className="list-disc list-inside text-slate-700 space-y-1">
                   <li><strong>Down Payment (DP 50%):</strong> Sebesar <strong className="text-emerald-700 font-mono">Rp {quoteDpVal.toLocaleString()}</strong> saat Purchase Order (PO) diterbitkan.</li>
                   <li><strong>Pelunasan (Sisa 50%):</strong> Dibayarkan setelah barang sampai di lokasi pabrik (Cash Against Delivery / CAD).</li>
-                  <li><strong>Pengiriman:</strong> Ready Stock / 24 Jam setelah DP dikonfirmasi.</li>
+                  <li><strong>Pengiriman Direct:</strong> Siap kirim dalam 24-48 jam setelah DP dikonfirmasi.</li>
                   <li><strong>Rekening Pembayaran DP:</strong> <span className="font-mono font-bold text-slate-900">{bankAccount}</span></li>
                 </ul>
               </div>
 
-              {/* Profit Indicator untuk Makelar (Hidden when printing) */}
+              {/* Profit Indicator untuk Anda (Hidden when printing) */}
               <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex justify-between items-center text-xs print:hidden">
-                <span className="text-emerald-800 font-medium">Estimasi Profit Bersih Anda dari Transaksi Ini:</span>
+                <span className="text-emerald-800 font-medium">Estimasi Keuntungan Bersih Anda dari Transaksi Ini:</span>
                 <span className="font-bold text-emerald-700 text-sm font-mono">+Rp {quoteProfit.toLocaleString()}</span>
               </div>
 
@@ -453,9 +500,10 @@ export default function SourcingMatrixPage() {
                   <p>* Surat penawaran ini berlaku selama 14 hari sejak tanggal diterbitkan.</p>
                 </div>
                 <div className="text-center font-medium">
-                  <p>Hormat kami,</p>
+                  <p>Hormat saya,</p>
                   <div className="h-16"></div>
-                  <p className="font-bold underline text-slate-900">MITRA SUPPLY INDUSTRI</p>
+                  <p className="font-bold underline text-slate-900">AZIZ</p>
+                  <p className="text-[10px] text-slate-500">Independent Industrial Sourcing Specialist</p>
                 </div>
               </div>
             </div>
