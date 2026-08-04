@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ====================================================================
  * AGENTFLOW AUTONOMOUS BROKERAGE LOOP ENGINE (LOOP ENGINEERING)
  * ====================================================================
@@ -146,7 +146,7 @@ async function main() {
 ⚠️ <b>Syarat DP 50%:</b> Rp ${deal.requiredDpAmt.toLocaleString()}
 ✅ <b>PROFIT AZIZ:</b> +Rp ${deal.grossProfit.toLocaleString()}
 ━━━━━━━━━━━━━━━━━━━━
-<i>Surat Penawaran PDF (AZIZ - Mandiri Livin' Gold) telah diterbitkan.</i>`;
+<i>Surat Penawaran PDF (AZIZ - SeaBank 901916089038) telah diterbitkan.</i>`;
 
       console.log(msg.replace(/<[^>]*>?/gm, '')); 
       await sendTelegramAlert(msg);

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { 
@@ -101,7 +101,7 @@ export default function FinanceLedgerPage() {
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
             <Wallet className="w-24 h-24 text-blue-500" />
           </div>
-          <h3 className="text-slate-400 font-medium text-sm">Estimasi Saldo Mandiri AZIZ</h3>
+          <h3 className="text-slate-400 font-medium text-sm">Estimasi Saldo SeaBank AZIZ</h3>
           <p className="text-3xl font-bold text-white mt-2">Rp {bankBalance.toLocaleString()}</p>
           <div className="mt-4 flex items-center text-xs text-blue-400 font-medium">
             <ShieldCheck className="w-4 h-4 mr-1" /> Termasuk Dana Mengendap

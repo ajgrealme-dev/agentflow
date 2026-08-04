@@ -36,7 +36,7 @@ export default function SourcingMatrixPage() {
   const [buyerName, setBuyerName] = useState('');
   const [buyerCity, setBuyerCity] = useState('Kawasan Industri Cikande, Serang');
   const [quantity, setQuantity] = useState('500');
-  const [bankAccount, setBankAccount] = useState('BCA 1234567890 a.n AZIZ');
+  const [bankAccount, setBankAccount] = useState('SeaBank 901916089038 a.n AZIZ');
   const [showQuotationPreview, setShowQuotationPreview] = useState(false);
 
   const fetchMatrix = async () => {
